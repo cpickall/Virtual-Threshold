@@ -2,6 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+
+    
+    
     //for debugging
     int runOnce = 0;
     
@@ -107,8 +110,12 @@ void ofApp::update(){
             int i = x+y*width;
             ofPoint p = mesh.getVertex(i);
             int i2 = (x*10) + (y*10) * imgW;
-            float zVal = kinect.getDepthPixelsRef()[i2];
-            p.z = zVal;
+            float dist = kinect.getDistanceAt(x*10,y*10);
+            float zVal = (1000-dist)/10.0;
+            if(dist == 0 ) zVal = 0;
+//            cout << zVal << endl;
+            //p.z = zVal;
+            p.z = .8*p.z + .2*zVal;
             mesh.setVertex(i, p);
             
         }
@@ -145,7 +152,7 @@ void ofApp::draw(){
     
     
     ofTranslate(0,0,1);
-    mesh.drawWireframe();
+//    mesh.drawWireframe();
     ofPopMatrix();
     
     
