@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    
+    light.enable();
     
     //for debugging
     int runOnce = 0;
@@ -19,8 +19,9 @@ void ofApp::setup(){
     
     ofSetFrameRate(60);
     
-    image.loadImage("pattern.jpg");
+    image.loadImage("mosque.jpg");
     image.resize(640, 480);
+//    bgimage.loadImage("1024.jpg");
     
     int width = image.getWidth() / 10;
     int height = image.getHeight() / 10;
@@ -66,7 +67,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    ofBackground(100, 100, 100);
+//    ofBackground(100,100,100);
     
     kinect.update();
     
@@ -111,10 +112,16 @@ void ofApp::update(){
             ofPoint p = mesh.getVertex(i);
             int i2 = (x*10) + (y*10) * imgW;
             float dist = kinect.getDistanceAt(x*10,y*10);
-            float zVal = (1000-dist)/10.0;
+//            cout<<dist<<endl;
+
+            float zVal = (2300-dist)/4.0;
             if(dist == 0 ) zVal = 0;
-//            cout << zVal << endl;
-            //p.z = zVal;
+            if(dist > 2300 || dist < 800){
+                zVal = 0;
+            }
+            
+            
+            //blended transition
             p.z = .8*p.z + .2*zVal;
             mesh.setVertex(i, p);
             
@@ -137,13 +144,17 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    ofBackground(0);
+    ofBackground(180,141,35);
+    
+//    bgimage.draw(0,0);
+
     
     ofSetColor(255);
     
     cam.begin();
     
     ofPushMatrix();
+    ofRotate(180);
     ofTranslate(-image.getWidth()*.5,-image.getHeight()*.5);
     
     image.getTextureReference().bind();
@@ -161,7 +172,7 @@ void ofApp::draw(){
     ofBox(0,0,0,image.getWidth());
     cam.end();
 
-    kinect.drawDepth(0,0, 200, 200);
+//    kinect.drawDepth(0,0, 200, 200);
     
     
 
@@ -180,6 +191,11 @@ void ofApp::keyPressed(int key){
             angle--;
             if(angle<-30) angle=-30;
             kinect.setCameraTiltAngle(angle);
+            break;
+            
+        case 'd':
+            float markDist = kinect.getDistanceAt(ofGetWidth()/2, ofGetHeight()/2);
+            cout << markDist << endl;
             break;
 
     }

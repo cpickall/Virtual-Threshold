@@ -30,10 +30,16 @@ class ofApp : public ofBaseApp{
     ofMesh mesh;
     ofEasyCam cam;
     
+    ofImage bgimage;
+    
+    ofLight light;
     
     
     int angle;
     
     int runOnce;
+    
+    int startX;
+    int startY;
     
 };
